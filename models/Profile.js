@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 // Create Schema
 const ProfileSchema = new Schema({
     user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
     },
     handle: {
         type: String,
@@ -50,7 +50,7 @@ const ProfileSchema = new Schema({
             },
             from: {
                 type: Date,
-                required: true
+                // required: true
             },
             to: {
                 type: Date
@@ -117,4 +117,4 @@ const ProfileSchema = new Schema({
     }
 });
 
-module.exports = Profile = mongoose.model('profile', ProfileSchema);
+module.exports = Profile = mongoose.model('Profile', ProfileSchema);
