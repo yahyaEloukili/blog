@@ -3,15 +3,15 @@ const {
   addExperience, deleteExperience, updateExperience, getExperience, getExperiences
 } = require('../controllers/experiences');
 const router = express.Router();
-
+const Experience = require('../models/Experience')
 const { protect } = require('../middleware/auth');
-
+const advancedResults = require('../middleware/advancedResults');
 
 
 router
-  .route('/')
+  .route('/profiles/:profileId')
   .get(
-    advancedResults(Review, {
+    advancedResults(Experience, {
       path: 'user'
     }),
     getExperiences

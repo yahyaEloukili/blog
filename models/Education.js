@@ -7,9 +7,9 @@ const EducationSchema = new Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User'
   },
-  profil: {
+  profile: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Profil'
+    ref: 'Profile'
   },
 
   school: {
@@ -18,15 +18,15 @@ const EducationSchema = new Schema({
   },
   degree: {
     type: String,
-    required: true
+    // required: true
   },
   fieldofstudy: {
     type: String,
-    required: true
+    // required: true
   },
   from: {
     type: Date,
-    required: true
+    // required: true
   },
   to: {
     type: Date

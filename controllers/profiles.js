@@ -3,22 +3,22 @@ const asyncHandler = require('../middleware/async');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const mongoose = require('mongoose');
-const router = require('../routes/profile');
 
 // @desc      Get current users profil
 // @route     GET /api/v1/profiles/me
 // @access    private
 exports.getMyProfile = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findOne({ user: req.user.id }).populate({ path: 'user', select: 'name avatar' });
-  if (!profile) {
-    return next(
-      new ErrorResponse(`Profile not found with id of ${req.params.id}`, 404)
-    );
+  const myProfile = await Profile.findOne({ user: req.user.id }).populate({
+    path: 'user',
+    select: 'name avatar'
+  });
+  if (!myProfile) {
+    return new ErrorResponse(`There is no profil of this user`, 404);
   }
   res.status(200).json({
     success: true,
-    data: profile
-  });
+    data: myProfile
+  })
 });
 
 // @desc      create  a user's profil
@@ -27,16 +27,15 @@ exports.getMyProfile = asyncHandler(async (req, res, next) => {
 
 exports.createMyProfile = asyncHandler(async (req, res, next) => {
 
-  const { company, website, handle, location, status, skills, bio, githubusername, youtube, twitter, facebook, instagram, linkedin } = req.body;
+  const { company, website, location, status, skills, bio, handle, youtube, twitter, facebook, instagram, linkedin } = req.body;
   const profilFields = {}
   profilFields.user = req.user.id;
   profilFields.company = req.body.company;
-  profilFields.handle = req.body.handle;
   profilFields.website = req.body.website;
   profilFields.location = req.body.location;
+  profilFields.handle = req.body.handle;
   profilFields.status = req.body.status;
   profilFields.bio = req.body.bio;
-  profilFields.githubusername = req.body.githubusername;
   profilFields.skills = req.body.skills;
   profilFields.social = {}
   profilFields.social.youtube = req.body.youtube
@@ -79,7 +78,7 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({ user: req.params.userId }).populate({ path: 'user', select: 'name avatar' });
   if (!profile) {
     return next(
-      new ErrorResponse(`Profile not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Profile not found with id of ${req.params.userId}`, 404)
     );
   }
   res.status(200).json({

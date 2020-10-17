@@ -4,18 +4,18 @@ const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Experience = require('../models/Experience');
 const mongoose = require('mongoose');
-const router = require('../routes/profile');
+const router = require('../routes/profiles');
 
 
 
 
 // @desc      Get experiences
 // @route     GET /api/v1/experiences
-// @route     GET /api/v1/profiles/:profileId/experiences
+// @route     GET /api/v1/experiences/profiles/:profileId
 // @access    Public
 exports.getExperiences = asyncHandler(async (req, res, next) => {
   if (req.params.profileId) {
-    const experiences = await experience.find({ profile: req.params.profileId }).populate('user');
+    const experiences = await Experience.find({ profile: req.params.profileId }).populate('user');
 
     return res.status(200).json({
       success: true,
@@ -23,8 +23,10 @@ exports.getExperiences = asyncHandler(async (req, res, next) => {
       data: experiences
     });
   } else {
+
     res.status(200).json(res.advancedResults);
   }
+
 });
 
 // @desc      Get single experience
@@ -32,8 +34,8 @@ exports.getExperiences = asyncHandler(async (req, res, next) => {
 // @access    Public
 exports.getExperience = asyncHandler(async (req, res, next) => {
   const experience = await Experience.findById(req.params.id).populate({
-    path: 'profil',
-    select: 'name description'
+    path: 'user',
+    select: 'name avatar'
   });
 
   if (!experience) {
@@ -50,18 +52,18 @@ exports.getExperience = asyncHandler(async (req, res, next) => {
 
 
 // @desc      Add experience
-// @route     POST /api/v1/profiles/:profilId/experiences
+// @route     POST /api/v1/experiences/profiles/:profilId
 // @access    Private
 exports.addExperience = asyncHandler(async (req, res, next) => {
-  req.body.profil = req.params.profilId;
+  req.body.profile = req.params.profileId;
   req.body.user = req.user.id;
 
-  const profil = await Profil.findById(req.params.profilId);
+  const profile = await Profile.findById(req.params.profileId);
 
-  if (!profil) {
+  if (!profile) {
     return next(
       new ErrorResponse(
-        `No profil with the id of ${req.params.profilId}`,
+        `No profile with the id of ${req.params.profileId}`,
         404
       )
     );
@@ -86,8 +88,7 @@ exports.updateExperience = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Make sure experience belongs to user or user is admin
-  // && req.user.role !== 'admin'
+  // Make sure experience belongs to user
   if (experience.user.toString() !== req.user.id) {
     return next(new ErrorResponse(`Not authorized to update experience`, 401));
   }

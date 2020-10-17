@@ -15,9 +15,13 @@ connectDB();
 
 // Route files
 const posts = require('./routes/posts');
+const experiences = require('./routes/experiences');
+const educations = require('./routes/educations');
 const auth = require('./routes/auth');
 const users = require('./routes/users');
-const profile = require('./routes/profiles');
+const profiles = require('./routes/profiles');
+const comments = require('./routes/comments');
+const likes = require('./routes/likes');
 
 const app = express();
 
@@ -39,11 +43,14 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Mount routers
-// app.use('/api/v1/posts', posts);
-app.use('/api/v1/profile', profile);
+app.use('/api/v1/profiles', profiles);
+app.use('/api/v1/experiences', experiences);
+app.use('/api/v1/educations', educations);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/posts', posts);
+app.use('/api/v1/likes', likes);
+app.use('/api/v1/comments', comments);
 
 
 app.use(errorHandler);

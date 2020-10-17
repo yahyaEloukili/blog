@@ -7,9 +7,9 @@ const ExperienceSchema = new Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User'
   },
-  profil: {
+  profile: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Profil'
+    ref: 'Profile'
   },
   title: {
     type: String,
@@ -43,4 +43,4 @@ const ExperienceSchema = new Schema({
   }
 });
 
-module.exports = Post = mongoose.model('Experience', ExperienceSchema);
+module.exports = mongoose.model('Experience', ExperienceSchema);

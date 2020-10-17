@@ -17,5 +17,6 @@ const LikeSchema = new Schema({
     default: Date.now
   }
 });
-
+//preventing user for liking more than one post
+LikeSchema.index({ post: 1, user: 1 }, { unique: true })
 module.exports = mongoose.model('Like', LikeSchema);

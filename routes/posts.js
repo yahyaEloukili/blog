@@ -1,18 +1,25 @@
 const express = require('express');
 const {
-  createPost, getPosts, getPost
+  getMyPosts, createMyPost, getPosts, getPost, deleteMyPost
 } = require('../controllers/posts');
 
-const router = express.Router();
 
+const router = express.Router();
+const Post = require('../models/Post')
+const advancedResults = require('../middleware/advancedResults');
 const { protect } = require('../middleware/auth');
 
 
-
-router.post('/', protect, createPost);
-router.get('/', protect, getPosts);
-router.get('/:id', protect, getPost);
+router.route('/me').get(protect, getMyPosts).delete(protect).post(protect, createMyPost);
 
 
+
+router.get('/', advancedResults(Post, {
+  path: 'user',
+  select: 'name avatar'
+}), getPosts);
+
+router.get('/users/:userId', getPost);
+router.delete('/:id', protect, deleteMyPost)
 
 module.exports = router;

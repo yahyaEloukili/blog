@@ -7,11 +7,6 @@ const {
 const router = express.Router();
 const Profile = require('../models/Profile')
 const advancedResults = require('../middleware/advancedResults');
-// Include other resource routers
-const experienceRouter = require('./experience');
-
-// Re-route into other resource routers
-router.use('/:profileId/experiences', experienceRouter);
 const { protect } = require('../middleware/auth');
 
 
@@ -22,9 +17,9 @@ router.route('/me').get(protect, getMyProfile).delete(protect, deleteMyProfile).
 router.get('/', advancedResults(Profile, {
   path: 'user',
   select: 'name avatar'
-}), getProfils);
+}), getProfiles);
 
-router.get('/users/:userId', getProfil);
+router.get('/users/:userId', getProfile);
 
 
 module.exports = router;
