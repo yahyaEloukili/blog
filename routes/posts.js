@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-    createPost, addLike, getPosts, getPost
+  createPost, getPosts, getPost
 } = require('../controllers/posts');
 
 const router = express.Router();
@@ -13,7 +13,6 @@ router.post('/', protect, createPost);
 router.get('/', protect, getPosts);
 router.get('/:id', protect, getPost);
 
-router.put('/like/:id', protect, addLike);
 
 
 module.exports = router;

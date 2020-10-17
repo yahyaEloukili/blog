@@ -1,21 +1,29 @@
 const express = require('express');
 const {
-    getMyProfil, createProfile, getProfils, getProfil, deleteProfil, addExperience, deleteExperience
-} = require('../controllers/profile');
+  getMyProfile, createMyProfile, getProfiles, getProfile, deleteMyProfile
+} = require('../controllers/profiles');
+
 
 const router = express.Router();
+const Profile = require('../models/Profile')
+const advancedResults = require('../middleware/advancedResults');
+// Include other resource routers
+const experienceRouter = require('./experience');
 
+// Re-route into other resource routers
+router.use('/:profileId/experiences', experienceRouter);
 const { protect } = require('../middleware/auth');
 
 
-router.get('/me', protect, getProfil);
+router.route('/me').get(protect, getMyProfile).delete(protect, deleteMyProfile).post(protect, createMyProfile);
 
-router.post('/', protect, createProfile);
-router.put('/experience', protect, addExperience);
-router.delete('/experience/:experienceId', protect, deleteExperience);
-router.delete('/', protect, deleteProfil);
 
-router.get('/', getProfils);
+
+router.get('/', advancedResults(Profile, {
+  path: 'user',
+  select: 'name avatar'
+}), getProfils);
+
 router.get('/users/:userId', getProfil);
 
 
