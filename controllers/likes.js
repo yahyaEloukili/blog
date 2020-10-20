@@ -40,7 +40,7 @@ exports.addLike = asyncHandler(async (req, res, next) => {
 // @route     DELETE /api/v1/likes/:id
 // @access    Private
 exports.unlike = asyncHandler(async (req, res, next) => {
-  const like = await Like.findById(req.params.id);
+  const like = await Like.findOne({ post: req.params.id });
 
   if (!like) {
     return next(

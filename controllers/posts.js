@@ -7,16 +7,14 @@ const mongoose = require('mongoose');
 // @desc      Get current users post// @route     GET /api/v1/posts/me
 // @access    private
 exports.getMyPosts = asyncHandler(async (req, res, next) => {
-  const myPost = await Post.find({ user: req.user.id }).populate({
+  const myPosts = await Post.find({ user: req.user.id }).populate({
     path: 'user',
     select: 'name avatar'
   });
-  if (!myPost) {
-    return new ErrorResponse(`There is no post of this user`, 404);
-  }
+
   res.status(200).json({
     success: true,
-    data: myPost
+    data: myPosts
   })
 });
 
@@ -44,7 +42,7 @@ exports.createMyPost = asyncHandler(async (req, res, next) => {
 
 // @desc      get  all posts
 // @route     get /api/v1/posts
-// @access    Public
+// @access    Private
 exports.getPosts = asyncHandler(async (req, res, next) => {
 
 
@@ -59,6 +57,21 @@ exports.getPost = asyncHandler(async (req, res, next) => {
   if (!post) {
     return next(
       new ErrorResponse(`post not found with id of ${req.params.userId}`, 404)
+    );
+  }
+  res.status(200).json({
+    success: true,
+    data: post
+  });
+});
+// @desc      get  a post by id
+// @route     get /api/v1/posts/:id
+// @access    Public
+exports.getPostById = asyncHandler(async (req, res, next) => {
+  const post = await Post.findById(req.params.id).populate({ path: 'user', select: 'name avatar' }).populate({ path: 'comments' });
+  if (!post) {
+    return next(
+      new ErrorResponse(`post not found with id of ${req.params.id}`, 404)
     );
   }
   res.status(200).json({

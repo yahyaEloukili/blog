@@ -17,7 +17,11 @@ router.route('/me').get(protect, getMyProfile).delete(protect, deleteMyProfile).
 router.get('/', advancedResults(Profile, {
   path: 'user',
   select: 'name avatar'
-}), getProfiles);
+}
+  // , {
+  //   path: 'educations'
+  // }
+), getProfiles);
 
 router.get('/users/:userId', getProfile);
 

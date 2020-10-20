@@ -11,22 +11,21 @@ const EducationSchema = new Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Profile'
   },
-
   school: {
     type: String,
     required: true
   },
   degree: {
     type: String,
-    // required: true
+    required: true
   },
   fieldofstudy: {
     type: String,
-    // required: true
+    required: true
   },
   from: {
     type: Date,
-    // required: true
+    required: true
   },
   to: {
     type: Date

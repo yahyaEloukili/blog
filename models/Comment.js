@@ -32,4 +32,4 @@ const CommentSchema = new Schema({
   }
 });
 
-module.exports = Post = mongoose.model('Comment', CommentSchema);
+module.exports = mongoose.model('Comment', CommentSchema);

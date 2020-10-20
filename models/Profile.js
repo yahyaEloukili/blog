@@ -9,7 +9,7 @@ const ProfileSchema = new Schema({
   },
   handle: {
     type: String,
-    required: true,
+    // required: true,
     max: 40
   },
   company: {
@@ -58,6 +58,32 @@ const ProfileSchema = new Schema({
     type: Date,
     default: Date.now
   }
+},
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  });
+
+
+// Reverse populate with virtuals
+ProfileSchema.virtual('educations', {
+  ref: 'Education',
+  localField: '_id',
+  foreignField: 'profile',
+  justOne: false
 });
 
+// Cascade delete educations when a bootcamp is deleted
+ProfileSchema.pre('remove', async function (next) {
+  console.log(`Educations being removed from profile ${this._id}`);
+  await this.model('Education').deleteMany({ profile: this._id });
+  next();
+});
+// Reverse populate with virtuals
+ProfileSchema.virtual('experiences', {
+  ref: 'Experience',
+  localField: '_id',
+  foreignField: 'profile',
+  justOne: false
+});
 module.exports = mongoose.model('Profile', ProfileSchema);

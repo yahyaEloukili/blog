@@ -69,11 +69,11 @@ exports.addEducation = asyncHandler(async (req, res, next) => {
     );
 
   }
-  const education = await Education.create(req.body);
+  const eduq = await Education.create(req.body)
 
   res.status(201).json({
     success: true,
-    data: education
+    data: eduq
   });
 })
 // @desc      Update education

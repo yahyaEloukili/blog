@@ -8,12 +8,22 @@ const mongoose = require('mongoose');
 // @route     GET /api/v1/profiles/me
 // @access    private
 exports.getMyProfile = asyncHandler(async (req, res, next) => {
+
+
   const myProfile = await Profile.findOne({ user: req.user.id }).populate({
     path: 'user',
     select: 'name avatar'
+  }
+  ).populate({
+    path: "experiences"
+  }).populate({
+    path: "educations"
   });
+
   if (!myProfile) {
-    return new ErrorResponse(`There is no profil of this user`, 404);
+    return next(
+      new ErrorResponse(`There is no profile of this user`, 404)
+    );
   }
   res.status(200).json({
     success: true,
@@ -43,8 +53,14 @@ exports.createMyProfile = asyncHandler(async (req, res, next) => {
   profilFields.social.facebook = req.body.facebook
   profilFields.social.linkedin = req.body.linkedin
   profilFields.social.instagram = req.body.instagram;
+  console.log(skills);
+  if (typeof req.body.skills !== 'undefined') {
+    profilFields.skills = req.body.skills.split(',').map(skill => skill.trim());
+    console.log(skills);
+  }
   let profil = await Profile.findOne({ user: req.user.id });
   if (profil) {
+
     profil = await Profile.findOneAndUpdate({ user: req.user.id }, profilFields, {
       new: true,
       runValidators: true
@@ -75,7 +91,7 @@ exports.getProfiles = asyncHandler(async (req, res, next) => {
 // @route     get /api/v1/profiles/users/:userId
 // @access    Public
 exports.getProfile = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findOne({ user: req.params.userId }).populate({ path: 'user', select: 'name avatar' });
+  const profile = await Profile.findOne({ user: req.params.userId }).populate({ path: 'user', select: 'name avatar' }).populate({ path: 'educations' }).populate({ path: 'experiences' });
   if (!profile) {
     return next(
       new ErrorResponse(`Profile not found with id of ${req.params.userId}`, 404)
@@ -91,8 +107,11 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
 // @route     delete /api/v1/profiles/me
 // @access    Private
 exports.deleteMyProfile = asyncHandler(async (req, res, next) => {
-  await Profile.findOneAndRemove({ user: req.user.id });
+  const profile = await Profile.findOne({ user: req.user.id });
   await User.findByIdAndRemove(req.user.id);
+  if (profile) {
+    profile.remove();
+  }
   res.status(200).json({
     success: true,
     msg: 'success'

@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  getMyPosts, createMyPost, getPosts, getPost, deleteMyPost
+  getMyPosts, createMyPost, getPosts, getPost, deleteMyPost, getPostById
 } = require('../controllers/posts');
 
 
@@ -14,12 +14,16 @@ router.route('/me').get(protect, getMyPosts).delete(protect).post(protect, creat
 
 
 
-router.get('/', advancedResults(Post, {
-  path: 'user',
-  select: 'name avatar'
-}), getPosts);
+router.get('/', protect, advancedResults(Post,
+  {
+    path: 'comments'
+  },
+
+  {
+    path: 'likes'
+  }), getPosts);
 
 router.get('/users/:userId', getPost);
-router.delete('/:id', protect, deleteMyPost)
+router.route('/:id').delete(protect, deleteMyPost).get(protect, getPostById)
 
 module.exports = router;
