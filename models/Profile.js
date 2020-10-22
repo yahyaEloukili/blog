@@ -57,6 +57,10 @@ const ProfileSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  photo: {
+    type: String,
+    default: 'no-photo.jpg'
   }
 },
   {

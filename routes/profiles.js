@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  getMyProfile, createMyProfile, getProfiles, getProfile, deleteMyProfile
+  getMyProfile, createMyProfile, getProfiles, getProfile, deleteMyProfile, userPhotoUpload
 } = require('../controllers/profiles');
 
 
@@ -15,8 +15,7 @@ router.route('/me').get(protect, getMyProfile).delete(protect, deleteMyProfile).
 
 
 router.get('/', advancedResults(Profile, {
-  path: 'user',
-  select: 'name avatar'
+  path: 'user'
 }
   // , {
   //   path: 'educations'
@@ -24,6 +23,6 @@ router.get('/', advancedResults(Profile, {
 ), getProfiles);
 
 router.get('/users/:userId', getProfile);
-
+router.route('/me/photo').put(protect, userPhotoUpload)
 
 module.exports = router;
